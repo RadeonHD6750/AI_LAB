@@ -1,10 +1,10 @@
 import numpy as np
 
 class LowPassFilter:
-    def __init__(self, cutoff_freq, ts):
+    def __init__(self, init, cutoff_freq, ts):
         self.ts = ts
         self.cutoff_freq = cutoff_freq
-        self.pre_out = 0.
+        self.pre_out = init
         self.tau = self.calc_filter_coef()
 
     def calc_filter_coef(self):

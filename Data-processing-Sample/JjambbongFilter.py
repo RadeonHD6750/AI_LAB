@@ -3,22 +3,40 @@ import matplotlib.pyplot as plt
 from LowpassFilter import *
 from KalmanFilter import *
 
-np.random.seed(0)
 
-def get_volt():
+class Sensor:
+
+    # volt_true: True voltage [V].
+    volt_true = 2.9
+    z_volt_meas = 0
+    ts = 0
+
+    def __init__(self):
+        np.random.seed(0)
+        pass
+
     """Measure voltage."""
-    v = np.random.normal(0, 2)   # v: measurement noise.
-    volt_true = 14.4             # volt_true: True voltage [V].
-    z_volt_meas = volt_true + v  # z_volt_meas: Measured Voltage [V] (observable).
-    return z_volt_meas
+    def get_volt(self):
+        v = np.random.normal(-0.5, 0.5)  # v: measurement noise.
+
+        #self.volt_true = self.volt_true - (self.ts * 0.01)
+
+        self.z_volt_meas = self.volt_true + v  # z_volt_meas: Measured Voltage [V] (observable).
+
+        self.ts = self.ts + 1
+        return self.z_volt_meas
+
 
 # Input parameters.
-time_end = 20
-dt = 0.01
-x_0 = 12  # 14 for book.
-P_0 = 6
+time_end = 10
+dt = 0.1
 
-lpf = LowPassFilter(cutoff_freq=10, ts=0.01)
+x_0 = 2.9 #초기값
+P_0 = 10
+
+sensor = Sensor()
+
+lpf = LowPassFilter(init=x_0, cutoff_freq=5, ts=dt * 0.1)
 kalf = KalmanFilter(x_0=x_0, P_0=P_0)
 lpkalf = KalmanFilter(x_0=x_0, P_0=P_0)
 
@@ -33,17 +51,18 @@ volt_lpesti_save = np.zeros(n_samples)
 x_esti = 0
 x_lpf = 0
 
-for i in range(n_samples):
-    z_meas = get_volt()
+for step in range(n_samples):
+
+    z_meas = sensor.get_volt()
 
     x_lpf = lpf.filter(z_meas)
     x_esti = kalf.filter(z_meas)
     x_lpesti = lpkalf.filter(x_lpf)
 
-    volt_meas_save[i] = z_meas
-    volt_lpf_save[i] = x_lpf
-    volt_esti_save[i] = x_esti
-    volt_lpesti_save[i] = x_lpesti
+    volt_meas_save[step] = z_meas
+    volt_lpf_save[step] = x_lpf
+    volt_esti_save[step] = x_esti
+    volt_lpesti_save[step] = x_lpesti
 
 
 plt.plot(time, volt_meas_save, 'r*--', label='Measurements')
