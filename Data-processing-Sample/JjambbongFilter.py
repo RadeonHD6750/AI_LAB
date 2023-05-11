@@ -19,7 +19,7 @@ class Sensor:
     def get_volt(self):
         v = np.random.normal(-0.5, 0.5)  # v: measurement noise.
 
-        #self.volt_true = self.volt_true - (self.ts * 0.01)
+        self.volt_true = self.volt_true - (self.ts * 0.001)
 
         self.z_volt_meas = self.volt_true + v  # z_volt_meas: Measured Voltage [V] (observable).
 
@@ -29,10 +29,10 @@ class Sensor:
 
 # Input parameters.
 time_end = 10
-dt = 0.1
+dt = 0.15
 
 x_0 = 2.9 #초기값
-P_0 = 10
+P_0 = 2
 
 sensor = Sensor()
 
@@ -65,10 +65,10 @@ for step in range(n_samples):
     volt_lpesti_save[step] = x_lpesti
 
 
-plt.plot(time, volt_meas_save, 'r*--', label='Measurements')
+plt.plot(time, volt_meas_save, 'r.--', label='Measurements')
 plt.plot(time, volt_lpf_save, 'gv--', label='Lowpass Filter')
-plt.plot(time, volt_esti_save, 'bo-', label='Kalman Filter')
-plt.plot(time, volt_lpesti_save, 'cx-', label='LPK Filter')
+plt.plot(time, volt_esti_save, 'cx-', label='Kalman Filter')
+plt.plot(time, volt_lpesti_save, 'bo-', label='LPK Filter')
 
 plt.legend(loc='upper left')
 plt.title('Measurements v.s. Estimation (Kalman Filter)')

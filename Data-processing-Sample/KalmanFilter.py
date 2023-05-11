@@ -1,9 +1,9 @@
 class KalmanFilter:
     # Initialization for system model.
-    A = 1
-    H = 1
-    Q = 0
-    R = 4
+    A = 1.1
+    H = 1.2
+    Q = 0.1
+    R = 0.5
 
     P = 0
 
@@ -18,6 +18,7 @@ class KalmanFilter:
         self.P = P_0
 
     def filter(self, z_meas):
+
         """Kalman Filter Algorithm for One Variable."""
         # (1) Prediction.
         x_pred = self.A * self.x_esti
