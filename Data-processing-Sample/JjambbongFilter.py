@@ -17,7 +17,7 @@ class Sensor:
 
     """Measure voltage."""
     def get_volt(self):
-        v = np.random.normal(-0.5, 0.5)  # v: measurement noise.
+        v = np.random.normal(-0.7, 0.7)  # v: measurement noise.
 
         self.volt_true = self.volt_true - (self.ts * 0.001)
 
