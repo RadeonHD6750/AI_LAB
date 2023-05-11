@@ -13,8 +13,9 @@ class KalmanFilter:
 
     x_esti = 0
 
-    def __int__(self, x_0, P_0):
-        self.x_esti, P = x_0, P_0
+    def __init__(self, x_0, P_0):
+        self.x_esti = x_0
+        self.P = P_0
 
     def filter(self, z_meas):
         """Kalman Filter Algorithm for One Variable."""
@@ -26,9 +27,9 @@ class KalmanFilter:
         K = P_pred * self.H / (self.H * P_pred * self.H + self.R)
 
         # (3) Estimation.
-        x_esti = x_pred + K * (z_meas - self.H * x_pred)
+        self.x_esti = x_pred + K * (z_meas - self.H * x_pred)
 
         # (4) Error Covariance.
-        P = P_pred - K * self.H * P_pred
+        self.P = P_pred - K * self.H * P_pred
 
-        return self.x_esti, self.P
+        return self.x_esti
